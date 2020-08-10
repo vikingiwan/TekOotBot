@@ -12,6 +12,7 @@ import time
 import configparser
 import os
 import sqlite3
+from cleverwrap import CleverWrap
 
 
 
@@ -20,7 +21,7 @@ global VERSION
 VERSION = '0.1a'
 
 global DEBUG
-DEBUG = True
+DEBUG = False
 
 global botID
 botID = 742278272515178547
@@ -57,6 +58,7 @@ def getTokens():
 		print("Creating one now.")
 		config.add_section("Tokens")
 		config.set("Tokens", "Bot", "null")
+		config.set("Tokens", "Cleverbot", "null")
 		with open ('tokens.cfg', 'w') as configfile:
 			config.write(configfile)
 		print("File created.")
@@ -64,7 +66,10 @@ def getTokens():
 		_ = input()
 	else:
 		config.read('tokens.cfg')
-		return config.get('Tokens', 'Bot')
+		global botToken
+		botToken = config.get('Tokens', 'Bot')
+		global cb
+		cb = CleverWrap(config.get('Tokens', 'Cleverbot'))
 
 def debug(msg):
 	if DEBUG == True:
@@ -218,6 +223,29 @@ async def info(ctx, member: discord.Member=None):
 	em.set_author(name=member.name, icon_url=member.avatar_url)
 	await ctx.channel.send(embed=em)
 
+#Cleverbot integration
+@bot.event
+async def on_message(message):
+	debug("Triggered event")
+	await bot.process_commands(message)
+	debug("Passed cmd processing")
+	_b = await message.guild.fetch_member(botID)
+	debug("fetched member")
+	if _b.mentioned_in(message):
+		debug("passed mention test")
+		if message.author.id != botID:
+			debug("Sender is not bot, sending typing effect")
+			async with message.channel.typing():
+				debug("typing effect done")
+				debug("stripping message")
+				stripmsg = message.content.replace('Tek Oot, ', "")
+				stripmsg = stripmsg.replace("<@!742278272515178547>", "")
+				debug("Stripped message: " + stripmsg)
+				botmsg = cb.say(stripmsg)
+				debug("Getting cleverbot response...")
+				await asyncio.sleep(8)
+				await message.channel.send(message.author.mention + ': ' + botmsg)
+				debug("sending response")
 
 
 
@@ -226,4 +254,5 @@ print ('Getting ready...')
 print('Loading TekOot v' + VERSION)
 create_tables()
 load_quotes()
-bot.run(getTokens())
+getTokens()
+bot.run(botToken)
