@@ -147,6 +147,9 @@ async def roll(ctx, *, dice : str=None):
 	except Exception:
 		await ctx.channel.send('Format has to be in NdN!')
 		return
+	result = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
+	await ctx.channel.send(result)
+      
 
 #Flip a coin
 @bot.command(pass_context = True)
