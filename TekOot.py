@@ -20,7 +20,7 @@ from cleverwrap import CleverWrap
 
 ##VARIABLES##
 global VERSION
-VERSION = '0.1a'
+VERSION = '0.2a'
 
 global DEBUG
 DEBUG = False
