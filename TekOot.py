@@ -64,8 +64,7 @@ def getTokens():
 		_ = input()
 	else:
 		config.read('tokens.cfg')
-		global token
-		token = config.get('Tokens', 'Bot')
+		return config.get('Tokens', 'Bot')
 
 def debug(msg):
 	if DEBUG == True:
@@ -219,5 +218,4 @@ print ('Getting ready...')
 print('Loading TekOot v' + VERSION)
 create_tables()
 load_quotes()
-getTokens()
-bot.run(token)
+bot.run(getTokens())
