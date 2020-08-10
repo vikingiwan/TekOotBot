@@ -119,7 +119,7 @@ async def on_ready():
 #Test Command
 @bot.command()
 async def test(ctx):
-	await ctx.channel.sent("Hello World!")
+	await ctx.channel.send("Hello World!")
 
 #New Help command
 @bot.command(pass_context = True)
