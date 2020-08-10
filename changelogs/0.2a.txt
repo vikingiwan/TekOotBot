@@ -1,0 +1,4 @@
+- Fixed !test command
+- Added !hug command
+- Added !ootpic command
+- Added Cleverbot chat-bot integration

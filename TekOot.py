@@ -12,6 +12,8 @@ import time
 import configparser
 import os
 import sqlite3
+import praw
+import aiohttp
 from cleverwrap import CleverWrap
 
 
@@ -34,7 +36,7 @@ global logChannel
 logChannel = 742290977581957182
 
 #Lists
-userCommands = ["help", "test", "roll", "flip", "remind", "addquote", "quote", "pfp", "info", "version", "changelog"]
+userCommands = ["help", "test", "ootpic", "hug", "roll", "flip", "remind", "addquote", "quote", "pfp", "info", "version", "changelog"]
 
 
 
@@ -44,6 +46,12 @@ bot = commands.Bot(command_prefix="!")
 connection = sqlite3.connect('OtterBrain.db')
 cur = connection.cursor()
 
+'''
+reddit = praw.Reddit(client_id="my client id",
+                     client_secret="my client secret",
+                     user_agent="my user agent")
+subreddit = reddit.subreddit(Otterable)
+'''
 
 
 ##UTILS##
@@ -231,6 +239,24 @@ async def info(ctx, member: discord.Member=None):
 	em = discord.Embed(title='', description=info, colour=0xFF0000)
 	em.set_author(name=member.name, icon_url=member.avatar_url)
 	await ctx.channel.send(embed=em)
+
+
+
+'''
+TESTING GROUNDS!
+'''
+
+@bot.command(pass_context = True)
+async def ootpic(ctx):
+	embed = discord.Embed(title="Cute Oot", description="via Reddit")
+
+	async with aiohttp.ClientSession() as cs:
+		async with cs.get('https://www.reddit.com/r/Otterable/new.json?sort=hot') as r:
+			res = await r.json()
+			embed.set_image(url=res['data']['children'] [random.randint(0, 25)]['data']['url'])
+			await ctx.send(embed=embed)
+
+
 
 #Cleverbot integration
 @bot.event
