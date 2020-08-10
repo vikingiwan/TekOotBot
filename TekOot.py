@@ -116,6 +116,11 @@ async def on_ready():
 
 ##USER COMMANDS##
 
+#Test Command
+@bot.command()
+async def test(ctx):
+	await ctx.channel.sent("Hello World!")
+
 #New Help command
 @bot.command(pass_context = True)
 async def help(ctx):
