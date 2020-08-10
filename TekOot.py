@@ -146,6 +146,15 @@ async def changelog(ctx, ver: str=VERSION):
 	for x in get_changelog(ver):
 		await ctx.channel.send("`" + str(x).strip("['],").replace("'", "") + "`")
 
+@bot.command(pass_context = True)
+async def hug(ctx):
+	hug = random.choice([True, False])
+	if hug == True:
+		await ctx.channel.send(ctx.message.author.mention)
+		await ctx.channel.send(file=discord.File("img/hug.png"))
+	else:
+		await ctx.channel.send(ctx.message.author.mention + ": No hug for you!")
+
 #Dice roll
 @bot.command()
 async def roll(ctx, *, dice : str=None):
